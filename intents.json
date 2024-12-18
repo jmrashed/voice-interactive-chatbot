@@ -1,0 +1,95 @@
+{
+  "intents":
+  [
+    {
+      "tag": "greetings",
+      "patterns": [
+        "hello",
+        "Hello",
+        "hey",
+        "hi",
+        "good day",
+        "greetings",
+        "what's up?",
+        "how is it going?",
+        "sup",
+        "yo"
+      ],
+      "responses": [
+        "Hello!",
+        "Hey!",
+        "What can I do for you?"
+      ]
+    },
+    {
+      "tag": "salutations",
+      "patterns": [
+        "cya",
+        "See you later",
+        "Goodbye",
+        "I am leaving",
+        "bye",
+        "cao",
+        "see ya"
+      ],
+      "responses": [
+        "Sad to see you go :(",
+        "Talk to you later.",
+        "Goodbye!",
+        "Farewell"
+      ]
+    },
+    {
+      "tag": "name",
+      "patterns": [
+        "what is your name?",
+        "what should I call you?",
+        "whats your name?",
+        "who are you?",
+        "can you tell me your name",
+        "state your name", "do you have a name?",
+        "did someone name you?",
+        "have you been named?"
+      ],
+      "responses": [
+        "You can call me Activity Wizard",
+        "My name is Activity Wizard",
+        "I am your assistant, the Activity Wizard"
+      ]
+    },
+    {
+      "tag": "specific_screen_confusion",
+      "patterns": [
+        "What do I do?",
+        "What does this do?",
+        "How do I work this?",
+        "How do I use this?",
+        "I don't know what to do",
+        "I am confused"
+      ],
+      "responses": [
+        "Try pressing a button to see something different",
+        "You're doing great! Press a button to see something new."
+      ]
+    },
+    {
+      "tag": "help",
+      "patterns": [
+        "Help",
+        "I need help",
+        "please help me",
+        "I need your help",
+        "I need help now",
+        "I need assistance",
+        "please call a real person for help",
+        "I need help from a real person",
+        "I want someone to come help me"
+      ],
+      "responses": [
+        "A real person has been alerted and help is on the way!",
+        "A real person is coming to help you now!",
+        "I have called for help, please remain calm until a real person arrives to assist you."
+      ]
+    }
+  ]
+}
