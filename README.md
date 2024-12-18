@@ -1,6 +1,14 @@
 # Python Voice Interactive Chatbot
 This project is a Python-based conversational AI chatbot that allows voice-based interactions using speech recognition (for input) and text-to-speech (for output). It uses a pre-trained model (DialoGPT) and can be fine-tuned on custom datasets using training.py.
 
+
+
+## Video Demonstration
+
+Check out this demonstration of the Python Voice Interactive Chatbot:
+
+[![Watch the video](https://img.youtube.com/vi/4CSBaI247H0/0.jpg)](https://youtu.be/4CSBaI247H0)
+
 ## Table of Contents
 - [Project Description](#project-description)
 - [Features](#features)
