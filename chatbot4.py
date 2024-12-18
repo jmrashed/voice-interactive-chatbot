@@ -130,47 +130,6 @@ def update_intents(text, response):
     except Exception as e:
         print(f"Error updating intents: {e}")
         return False
-def confirm_intent_save(text, response):
-    """
-    Prompt user via voice for confirmation to save new intent.
-    
-    Returns:
-    - True if user confirms saving
-    - False if user declines
-    """
-    print(f"Detected unmatched intent. Would you like to save this interaction?")
-    speak_macos("Detected unmatched intent. Would you like to save this interaction?")
-    
-    # Listen for confirmation
-    while True:
-        confirmation = recognize_speech()
-        
-        if not confirmation:
-            continue
-        
-        confirmation = confirmation.lower()
-        
-        if confirmation in ['yes', 'yeah', 'yep', 'sure', 'okay', 'ok']:
-            # Attempt to update intents
-            result = update_intents(text, response)
-            if result:
-                print("New intent saved successfully!")
-                speak_macos("New intent saved successfully!")
-                return True
-            else:
-                print("Failed to save intent.")
-                speak_macos("Failed to save intent.")
-                return False
-        
-        elif confirmation in ['no', 'nope', 'cancel', 'stop']:
-            print("Intent not saved. How else can I help you?")
-            speak_macos("Intent not saved. How else can I help you?")
-            return False
-        
-        else:
-            print("I didn't understand. Please say 'yes' or 'no'.")
-            speak_macos("I didn't understand. Please say 'yes' or 'no'.")
-
 def chat():
     """
     Main chat loop with voice interaction.
@@ -182,8 +141,7 @@ def chat():
     chatbot, tokenizer = initialize_chatbot()
     
     print("Hello, I am JTalk. I am an AI voice assistant that can listen to both text and audio. I can also change your voice commands into text. This is JTalk version 1.0.0, released on December 18, 2024. How can I help you today?")
-    # speak_macos("Hello, I am JTalk. I am an AI voice assistant that can listen to both text and audio. I can also change your voice commands into text. This is JTalk version 1.0.0, released on December 18, 2024. How can I help you today?")
-    speak_macos("Hello, I am JTalk. This is JTalk version 1.0.0, released on December 18, 2024. How can I help you today?")
+    speak_macos("Hello, I am JTalk. I am an AI voice assistant that can listen to both text and audio. I can also change your voice commands into text. This is JTalk version 1.0.0, released on December 18, 2024. How can I help you today?")
     
     conversation_history = []
     
@@ -207,9 +165,6 @@ def chat():
             # If no match found, use the transformer model for generating a response
             conversation_history.append(text)
             response = generate_response(chatbot, tokenizer, text, conversation_history)
-            
-            # Ask for confirmation to save as a new intent
-            confirm_intent_save(text, response)
         
         # Add response to conversation history
         conversation_history.append(response)

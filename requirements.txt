@@ -3,3 +3,4 @@ pyttsx3==2.90
 pipwin==0.5.1  
 nltk==3.9.0  
 tensorflow==2.14.0  
+flask

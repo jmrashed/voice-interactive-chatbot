@@ -1,0 +1,226 @@
+{
+    "intents": [
+        {
+            "tag": "greetings",
+            "patterns": [
+                "what's up?",
+                "hello",
+                "good evening",
+                "how's it going?"
+            ],
+            "responses": [
+                "Hello! How can I assist you today?",
+                "Hi! How can I help you?",
+                "Hey there! What can I do for you?"
+            ]
+        },
+        {
+            "tag": "salutations",
+            "patterns": [
+                "take care",
+                "bye",
+                "farewell",
+                "see you later"
+            ],
+            "responses": [
+                "See you later! Feel free to return anytime.",
+                "Goodbye! Have a great day!",
+                "Farewell! Take care!"
+            ]
+        },
+        {
+            "tag": "help",
+            "patterns": [
+                "how does this work?",
+                "I'm lost",
+                "can you help me?",
+                "help",
+                "assist me"
+            ],
+            "responses": [
+                "I'm happy to assist! What are you struggling with?",
+                "Sure! What do you need help with?",
+                "I'm here to help! What can I assist you with?"
+            ]
+        },
+        {
+            "tag": "name",
+            "patterns": [
+                "what's your name?",
+                "who are you?",
+                "do you have a name?",
+                "what should I call you?"
+            ],
+            "responses": [
+                "Hello, I am JTalk. I am an AI voice assistant that can listen to both text and audio. I can also change your voice commands into text. This is JTalk version 1.0.0, released on December 18, 2024. How can I help you today?",
+                "Hello, I am JTalk. I am an AI voice assistant that can listen to both text and audio. How can I help you today?",
+                "Hello, I am JTalk.  How can I help you today?",
+                "Hello, I am JTalk."
+            ]
+        },
+        {
+            "tag": "weather",
+            "patterns": [
+                "what's the forecast?",
+                "what's the weather like?",
+                "is it raining today?"
+            ],
+            "responses": [
+                "You can check weather services for live updates on the forecast.",
+                "I'm not sure, but you can check your local weather forecast!",
+                "I recommend using a weather app for up-to-date information."
+            ]
+        },
+        {
+            "tag": "location",
+            "patterns": [
+                "where is this place?",
+                "how do I get here?",
+                "where am I?"
+            ],
+            "responses": [
+                "I don't have access to your location, but you can use GPS or a map app to find it.",
+                "You can check your current location using Google Maps or any similar app."
+            ]
+        },
+        {
+            "tag": "product_inquiry",
+            "patterns": [
+                "what is this product?",
+                "can you tell me about this item?",
+                "what features does this product have?",
+                "tell me about the features of this product"
+            ],
+            "responses": [
+                "This product has many features! Would you like to know more details?",
+                "This product is designed for your convenience! Let me know if you need more info."
+            ]
+        },
+        {
+            "tag": "pricing",
+            "patterns": [
+                "can you tell me the price?",
+                "what's the price?",
+                "how much does this cost?"
+            ],
+            "responses": [
+                "The pricing information is available on our website!",
+                "You can find the price by visiting our product page."
+            ]
+        },
+        {
+            "tag": "order_status",
+            "patterns": [
+                "has my order shipped?",
+                "where is my order?",
+                "is my order ready?"
+            ],
+            "responses": [
+                "Please check your order status in your account.",
+                "I recommend you track your order via the tracking number provided."
+            ]
+        },
+        {
+            "tag": "support",
+            "patterns": [
+                "there's a problem with the service",
+                "can you help me with a technical issue?",
+                "I'm having trouble",
+                "I need technical support"
+            ],
+            "responses": [
+                "I'll help you sort that out! Can you explain the issue?",
+                "I'm here to assist with technical issues. Please describe the problem."
+            ]
+        },
+        {
+            "tag": "payment_inquiry",
+            "patterns": [
+                "how do I pay?",
+                "is there any discount?",
+                "can I pay via credit card?",
+                "what payment methods are accepted?"
+            ],
+            "responses": [
+                "You can pay using Visa, Mastercard, or PayPal.",
+                "We accept several payment methods including credit cards and PayPal."
+            ]
+        },
+        {
+            "tag": "account_management",
+            "patterns": [
+                "how do I create an account?",
+                "how can I change my password?",
+                "how do I update my profile?",
+                "can I delete my account?"
+            ],
+            "responses": [
+                "To update your profile, go to your account settings.",
+                "You can create an account by visiting the registration page."
+            ]
+        },
+        {
+            "tag": "feedback",
+            "patterns": [
+                "how can I provide feedback?",
+                "can I rate this service?",
+                "I have some suggestions",
+                "I want to give feedback"
+            ],
+            "responses": [
+                "We'd love to hear your feedback! Please share your thoughts.",
+                "Your feedback is important to us. Please send us your suggestions."
+            ]
+        },
+        {
+            "tag": "maintenance",
+            "patterns": [
+                "is the site down?",
+                "is this service available?",
+                "why can't I access this?",
+                "is there a maintenance issue?"
+            ],
+            "responses": [
+                "It looks like the site is undergoing maintenance. Please check back later.",
+                "We are currently working on updates. Thanks for your patience!"
+            ]
+        },
+        {
+            "tag": "security",
+            "patterns": [
+                "is my data secure?",
+                "how do I protect my account?",
+                "is this service safe?"
+            ],
+            "responses": [
+                "We take your security seriously and encrypt your data to ensure safety.",
+                "Yes, your information is protected by encryption and other security measures."
+            ]
+        },
+        {
+            "tag": "time",
+            "patterns": [
+                "what's the current time?",
+                "can you tell me the time?",
+                "how late is it?",
+                "what time is it?"
+            ],
+            "responses": [
+                "You can check the time on your device.",
+                "Please check your phone or computer for the current time."
+            ]
+        },
+        {
+            "tag": "product_return",
+            "patterns": [
+                "how do I return a product?",
+                "can I return an item?",
+                "how can I exchange this?"
+            ],
+            "responses": [
+                "Please visit our returns section for detailed instructions.",
+                "You can return the product by following our return policy on the website."
+            ]
+        }
+    ]
+}

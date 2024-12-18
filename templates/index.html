@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JTalk - Voice Assistant</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .chat-container {
+            max-height: 70vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            max-width: 80%;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 10px;
+            clear: both;
+        }
+        .user-message {
+            background-color: #E6F2FF;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .bot-message {
+            background-color: #F0F0F0;
+            align-self: flex-start;
+        }
+        #permission-modal, #error-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="bg-blue-500 text-white p-4 text-center">
+            <h1 class="text-xl font-bold">JTalk Voice Assistant</h1>
+        </div>
+        
+        <div id="chat-container" class="chat-container p-4 space-y-2"></div>
+        
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex items-center space-x-2">
+                <input 
+                    type="text" 
+                    id="message-input" 
+                    class="flex-grow p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                    placeholder="Type your message..."
+                >
+                <button 
+                    id="send-btn" 
+                    class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition"
+                >
+                    Send
+                </button>
+                <button 
+                    id="record-btn" 
+                    class="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition"
+                >
+                    🎤
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Microphone Permission Modal -->
+    <div id="permission-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-xl text-center">
+            <h2 class="text-xl font-bold mb-4">Microphone Access Required</h2>
+            <p class="mb-4">This app needs microphone access to record your voice. Please grant microphone permissions.</p>
+            <button 
+                id="request-permission-btn" 
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+                Request Microphone Access
+            </button>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="error-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-xl text-center">
+            <h2 class="text-xl font-bold mb-4 text-red-600">Error</h2>
+            <p id="error-message" class="mb-4"></p>
+            <button 
+                id="close-error-btn" 
+                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            >
+                Close
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const recordBtn = document.getElementById('record-btn');
+        const permissionModal = document.getElementById('permission-modal');
+        const errorModal = document.getElementById('error-modal');
+        const errorMessageEl = document.getElementById('error-message');
+        const requestPermissionBtn = document.getElementById('request-permission-btn');
+        const closeErrorBtn = document.getElementById('close-error-btn');
+
+        let mediaRecorder;
+        let audioChunks = [];
+        let microphoneStream = null;
+
+        // Show error modal
+        function showErrorModal(message) {
+            errorMessageEl.textContent = message;
+            errorModal.style.display = 'flex';
+        }
+
+        // Close error modal
+        closeErrorBtn.addEventListener('click', () => {
+            errorModal.style.display = 'none';
+        });
+
+        // Enhanced message display function
+        function addMessageToChatContainer(message, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add(
+                'message', 
+                sender === 'You' ? 'user-message' : 'bot-message',
+                'inline-block', 
+                'clear-both'
+            );
+            messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chatContainer.appendChild(messageElement);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Check and request microphone permissions
+        function checkMicrophonePermission() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    // Permissions granted
+                    permissionModal.style.display = 'none';
+                    microphoneStream = stream;
+                    recordBtn.disabled = false;
+                })
+                .catch(err => {
+                    // Show permission modal
+                    permissionModal.style.display = 'flex';
+                    recordBtn.disabled = true;
+                    console.error('Microphone access denied:', err);
+                    showErrorModal('Microphone access is required. Please grant permissions.');
+                });
+        }
+
+        // Request microphone permission
+        requestPermissionBtn.addEventListener('click', () => {
+            checkMicrophonePermission();
+        });
+
+        // Initial permission check
+        checkMicrophonePermission();
+
+        // Text message sending
+        sendBtn.addEventListener('click', () => {
+            const message = messageInput.value.trim();
+            if (message) {
+                sendMessage('text', message);
+                messageInput.value = '';
+            }
+        });
+
+        // Allow sending message on Enter key
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const message = messageInput.value.trim();
+                if (message) {
+                    sendMessage('text', message);
+                    messageInput.value = '';
+                }
+            }
+        });
+
+        // Audio recording
+        recordBtn.addEventListener('click', async () => {
+            if (!microphoneStream) {
+                showErrorModal('Microphone access is required. Please grant permissions.');
+                checkMicrophonePermission();
+                return;
+            }
+
+            if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+                try {
+                    mediaRecorder = new MediaRecorder(microphoneStream, { 
+                        mimeType: 'audio/webm' 
+                    });
+                    
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = event => {
+                        if (event.data.size > 0) {
+                            audioChunks.push(event.data);
+                        }
+                    };
+
+                    mediaRecorder.onstop = async () => {
+                        if (audioChunks.length === 0) {
+                            showErrorModal('No audio recorded. Please try again.');
+                            return;
+                        }
+
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        
+                        // Check blob size
+                        if (audioBlob.size === 0) {
+                            showErrorModal('No audio recorded. Please try again.');
+                            return;
+                        }
+
+                        const reader = new FileReader();
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = () => {
+                            const base64Audio = reader.result.split(',')[1];
+                            sendMessage('audio', base64Audio);
+                        };
+                    };
+
+                    mediaRecorder.start();
+                    recordBtn.textContent = '🛑 Stop Recording';
+                    recordBtn.classList.remove('bg-green-500');
+                    recordBtn.classList.add('bg-red-500');
+                } catch (err) {
+                    console.error('Error accessing microphone', err);
+                    showErrorModal(`Microphone error: ${err.message}`);
+                    checkMicrophonePermission();
+                }
+            } else {
+                mediaRecorder.stop();
+                recordBtn.textContent = '🎤';
+                recordBtn.classList.remove('bg-red-500');
+                recordBtn.classList.add('bg-green-500');
+            }
+        });
+
+        function sendMessage(inputType, inputData = null) {
+            const message = inputType === 'text' ? inputData : inputData;
+            
+            if (!message) return;
+
+            // Add user message to chat
+            addMessageToChatContainer(message, 'You');
+
+            // Send to server
+            axios.post('/chat', { 
+                input_type: inputType,
+                message: message 
+            })
+            .then(response => {
+                const botResponse = response.data.response;
+                
+                // Add bot response to chat
+                addMessageToChatContainer(botResponse, 'Bot');
+
+                // Play audio response if available
+                if (response.data.audio_response) {
+                    try {
+                        const audio = new Audio(`data:audio/wav;base64,${response.data.audio_response}`);
+                        audio.play()
+                            .then(() => console.log('Audio played successfully'))
+                            .catch(err => {
+                                console.error('Audio playback error:', err);
+                                showErrorModal('Failed to play audio response');
+                            });
+                    } catch (err) {
+                        console.error('Error creating audio:', err);
+                        showErrorModal('Failed to process audio response');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Server communication error:', error);
+                addMessageToChatContainer('Sorry, something went wrong.', 'Bot');
+                showErrorModal(`Communication error: ${error.message}`);
+            });
+        }
+
+        // Ensure audio can be played
+        document.addEventListener('click', () => {
+            // This is a workaround for autoplay restrictions
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            audioContext.resume();
+        });
+    </script>
+</body>
+</html>
